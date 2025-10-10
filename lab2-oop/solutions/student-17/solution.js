@@ -1,4 +1,4 @@
-﻿'use strict'
+'use strict'
 
 // ===== ЗАДАНИЕ 1: Базовый класс Vehicle =====
 class Vehicle {
