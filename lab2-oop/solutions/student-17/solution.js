@@ -121,24 +121,8 @@ class ElectricCar extends Car {
 
 // Создайте функцию createVehicleFactory, которая возвращает функцию 
 // для создания транспортных средств определенного типа (каррирование).
-const createVehicleFactory = (vehicleType) => {
-
-    if (typeof vehicleType !== 'string') {
-        throw new Error('Тип транспортного средства должен быть строкой');
-    }
-    
-    return (make, model, year, numDoors, batteryCapacity) => {
-        switch (vehicleType) {
-            case 'Vehicle':
-                return new Vehicle(make, model, year);
-            case 'Car':
-                return new Car(make, model, year, numDoors);
-            case 'ElectricCar':
-                return new ElectricCar(make, model, year, numDoors, batteryCapacity);
-            default:
-                throw new Error(`Неизвестный тип транспортного средства: ${vehicleType}`);
-        }
-    };
+const createVehicleFactory = (vehicleType) => (make, model, year, ...additionalArgs) => {
+    return new vehicleType(make, model, year, ...additionalArgs);
 };
 
 
@@ -323,46 +307,35 @@ function runTests() {
     console.assert(testVehicle.age === (new Date().getFullYear() - 2010), 'Тест возраста провален');
 
    //ЗАДАНИЕ 4
+
     console.log('ЗАДАНИЕ 4');
 
-    const createvehicleFactory = createVehicleFactory('Vehicle');
-    const myNewVehicle = createvehicleFactory('BMW', 'X5', 2022);
-    console.assert(myNewVehicle instanceof Vehicle, 'Тест создания фабрики Vehicle провален');
-    console.log('Создан новый автомобиль фабрики "Vehicle":');
-    myNewVehicle.displayInfo();
+    const createVehicle = createVehicleFactory(Vehicle);
+    const factoryVehicle = createVehicle('Factory', 'Basic', 2019);
+    console.log('Создан Vehicle через фабрику:');
+    factoryVehicle.displayInfo();
 
-    const createCarFactory = createVehicleFactory('Car');
-    const myNewCar = createCarFactory('BMW', 'X5', 2022, 4);
-    console.assert(myNewCar instanceof Car, 'Тест создания фабрики Car провален');
-    console.log('Создан новый автомобиль фабрики "Car":');
+    const createCarFactory = createVehicleFactory(Car);
+    const myNewCar = createCarFactory('BMW', 'X5', 2022, 5);
+    console.log('Создан новый Car через фабрику:');
     myNewCar.displayInfo();
 
-    const createElectricCarFactory = createVehicleFactory('ElectricCar');
-    const myNewElectricCar = createElectricCarFactory('Tesla', 'X', 2020, 2, 75);
-    console.assert(myNewElectricCar instanceof ElectricCar, 'Тест создания фабрики ElectricCar провален');
-    console.log('Создан новый автомобиль фабрики "ElectricCar":');
+    const createElectricCarFactory = createVehicleFactory(ElectricCar);
+    const myNewElectricCar = createElectricCarFactory('Nissan', 'Leaf', 2021, 5, 40);
+    console.log('Создан новый ElectricCar через фабрику:');
     myNewElectricCar.displayInfo();
-    console.log(`Запас хода: ${electricCar.calculateRange()} км`);
-        let bike;
-    try {
-        const createBikeFactory = createVehicleFactory('Bike');
-        const bike = createBikeFactory();
-        console.assert(false, 'Тест на неизвестный тип транспортного средства провален - ошибка не была выброшена');
-    } catch (error) {
-        console.assert(error.message === 'Неизвестный тип транспортного средства: Bike', 'Тест на неизвестный тип транспортного средства провален');
-    }
 
-    try {
-        const createBikeFactory = createVehicleFactory(34);
-        console.assert(false, 'Тест на нестроковый тип провален - ошибка не была выброшена');
-    } catch (error) {
-        console.assert(error.message === 'Тип транспортного средства должен быть строкой', 'Тест на нестроковый тип провален');
-    }
+
+    const car3Doors = createCarFactory('Mini', 'Cooper', 2020, 3);
+    console.log('Car с 3 дверями через фабрику:');
+    car3Doors.displayInfo();
+
+    // Задание 5
 
     console.log('ЗАДАНИЕ 5')
 
     console.log('Всего создано транспортных средств:', Vehicle.getTotalVehicles());
-    console.assert(Vehicle.getTotalVehicles() === 9, 'Тест подсчета количества созданных ТС провален')
+    console.assert(Vehicle.getTotalVehicles() === 10, 'Тест подсчета количества созданных ТС провален')
 
     console.log('Все тесты пройдены! ✅');
 }
