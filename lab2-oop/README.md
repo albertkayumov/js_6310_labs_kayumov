@@ -14,7 +14,7 @@ git add solutions/student-{ваш_номер}/solution.js
 
 git commit -m "Lab 2 solution by student {номер}"
 
-git push origin student-{ваш_номер}
+git push origin student-lab2-{ваш_номер}
 
 ### 6. Сроки сдачи
 Дата выдачи: 15.09.2025

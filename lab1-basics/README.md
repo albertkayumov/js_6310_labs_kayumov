@@ -5,14 +5,17 @@ cd lab1-basics
 git checkout -b student-lab1-{ваш_номер}
 ### 3. Создайте папку с решениями и скопируйте в нее файл задания с переименованием
 mkdir solutions/student-{ваш_номер}
+
 cp tasks/lab1-tasks.js solutions/student-{ваш_номер}/solution.js
 ### 4. Выполните задания и тесты
 cd solutions/student-{ваш_номер}
 node solution.js
 ### 5. Закоммитьте и запушьте изменения
 git add solutions/student-{ваш_номер}/solution.js
+
 git commit -m "Lab 1 solution by student {номер}"
-git push origin student-{ваш_номер}
+
+git push origin student-lab2-{ваш_номер}
 ### 6. Сроки сдачи
 Дата выдачи: 08.09.2025
 Срок ревью: {дата + 14 дней}
