@@ -3,15 +3,21 @@
   "name": "KAI Chaos Mode",
   "version": "1.0",
   "description": "Добавляет кнопку для переключения в хаусный режим",
-  "permissions": [
-    "activeTab",
-    "storage"
-  ],
+  "permissions": [ "storage" ],
+  "icons": { "128": "images/plugin_logo.png" },
+  "web_accessible_resources": [
+        {
+        "resources": [ "images/icon_on.png", 
+                        "images/icon_off.png"
+                      ],
+        "matches": [ "https://kai.ru/*", "https://abiturientu.kai.ru/*" ]
+        }
+    ],
+
   "content_scripts": [
     {
-      "matches": ["https://kai.ru/*"],
-      "js": ["content.js"],
-      "run_at": "document_idle"
+      "matches": [ "https://kai.ru/*", "https://abiturientu.kai.ru/*" ],
+      "js": ["content.js"]
     }
   ]
 }

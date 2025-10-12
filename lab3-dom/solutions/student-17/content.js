@@ -1,251 +1,302 @@
-'use strict';
+'use strict'
 
-function unleashControlledChaos() {
-    let isChaosActive = false;
-    let originalStyles = new Map();
+function Rainbow_Chaos_Mode() {
+    const STYLE_ENABLED_KEY = 'RainbowChaosModeEnabled';
+    const themePalette = {
+        rainbow: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'],
+        neon: ['#FF00FF', '#00FFFF', '#FFFF00', '#FF00FF', '#00FF00', '#FF8000'],
+        pastel: ['#FFB6C1', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C', '#FFA07A']
+    };
     
-    // Функция поломки сайта
-    function breakTheSite() {
-        if (isChaosActive) return;
-        isChaosActive = true;
-        
-        console.log('🚧 Начинаем ломать сайт KAI...');
-        
-        // Сохраняем оригинальные стили перед изменением
-        saveOriginalStyles();
-        
-        // 1. Ломаем layout - случайные позиции
-        document.querySelectorAll('div, header, footer, nav, section, article').forEach(element => {
-            if (Math.random() > 0.6) {
-                element.style.position = 'relative';
-                element.style.left = `${Math.random() * 100 - 50}px`;
-                element.style.top = `${Math.random() * 100 - 50}px`;
-            }
-        });
-        
-        // 2. Искажаем размеры элементов
-        document.querySelectorAll('div, img, p, h1, h2, h3').forEach(element => {
-            if (Math.random() > 0.7) {
-                const scale = 0.5 + Math.random() * 1.5;
-                element.style.transform = `scale(${scale})`;
-            }
-        });
-        
-        // 3. Рандомные цвета для основных блоков
-        document.querySelectorAll('#page_wrapper, .main_slider_holder, .news_box, header, footer').forEach(element => {
-            element.style.backgroundColor = getRandomPastelColor();
-            element.style.color = getRandomDarkColor();
-        });
-        
-        // 4. Ломаем текст - случайные шрифты и размеры
-        document.querySelectorAll('p, span, a, li').forEach(element => {
-            if (element.textContent && element.textContent.length > 10) {
-                const fonts = ['Comic Sans MS', 'Papyrus', 'Times New Roman', 'Arial', 'Courier New'];
-                element.style.fontFamily = fonts[Math.floor(Math.random() * fonts.length)];
-                element.style.fontSize = `${12 + Math.random() * 10}px`;
-                
-                // Некоторые слова делаем перевернутыми
-                if (Math.random() > 0.8) {
-                    element.innerHTML = element.innerHTML.split(' ').map(word => {
-                        return Math.random() > 0.7 ? `<span style="display:inline-block;transform:rotate(180deg)">${word}</span>` : word;
-                    }).join(' ');
-                }
-            }
-        });
-        
-        // 5. Ломаем изображения
-        document.querySelectorAll('img').forEach(img => {
-            if (Math.random() > 0.5) {
-                img.style.filter = `hue-rotate(${Math.random() * 360}deg)`;
-                img.style.opacity = 0.5 + Math.random() * 0.5;
-            }
-        });
-        
-        // 6. Рандомные отступы и границы
-        document.querySelectorAll('div, section, article').forEach(element => {
-            if (Math.random() > 0.6) {
-                element.style.margin = `${Math.random() * 20}px`;
-                element.style.padding = `${Math.random() * 30}px`;
-                element.style.border = `${Math.random() * 5}px solid ${getRandomColor()}`;
-            }
-        });
-        
-        // 7. Ломаем навигацию - случайные ссылки
-        document.querySelectorAll('a').forEach(link => {
-            if (Math.random() > 0.8) {
-                const originalHref = link.href;
-                link.href = 'javascript:void(0)';
-                link.title = 'Ссылка сломана!';
-                link.style.textDecoration = 'line-through';
-            }
-        });
-        
-        updateButtonState();
-    }
-    
-    // Функция восстановления сайта
-    function fixTheSite() {
-        if (!isChaosActive) return;
-        isChaosActive = false;
-        
-        console.log('🔧 Восстанавливаем сайт KAI...');
-        
-        // Восстанавливаем оригинальные стили
-        restoreOriginalStyles();
-        
-        updateButtonState();
-    }
-    
-    // Сохранение оригинальных стилей
-    function saveOriginalStyles() {
-        document.querySelectorAll('*').forEach(element => {
-            if (element.style.cssText) {
-                originalStyles.set(element, element.style.cssText);
-            }
-        });
-    }
-    
-    // Восстановление оригинальных стилей
-    function restoreOriginalStyles() {
-        document.querySelectorAll('*').forEach(element => {
-            const originalStyle = originalStyles.get(element);
-            if (originalStyle) {
-                element.style.cssText = originalStyle;
-            } else {
-                element.style.cssText = '';
-            }
-        });
-        originalStyles.clear();
-    }
-    
-    // Генерация случайных цветов (более приятных)
+    let toggleButton;
+    let chaosInterval = null;
+    const icon_on = chrome.runtime.getURL('images/icon_on.png');
+    const icon_off = chrome.runtime.getURL('images/icon_off.png');
+
     function getRandomColor() {
-        return '#' + Math.floor(Math.random()*16777215).toString(16);
+        const palette = themePalette.rainbow;
+        return palette[Math.floor(Math.random() * palette.length)];
     }
-    
-    function getRandomPastelColor() {
-        const hue = Math.floor(Math.random() * 360);
-        return `hsl(${hue}, 70%, 85%)`;
+
+    function getRandomRotation() {
+        return Math.random() * 10 - 5; // -5deg to +5deg
     }
-    
-    function getRandomDarkColor() {
-        const hue = Math.floor(Math.random() * 360);
-        return `hsl(${hue}, 70%, 20%)`;
-    }
-    
-    // Создание кнопки управления
-    function createControlButton() {
-        if (document.getElementById('chaos-control-btn')) return;
-        
-        const button = document.createElement('button');
-        button.id = 'chaos-control-btn';
-        button.innerHTML = '🔧 Поломать сайт';
-        
-        // Стили для кнопки
-        Object.assign(button.style, {
-            position: 'fixed',
-            top: '10px',
-            right: '10px',
-            zIndex: '10000',
-            padding: '10px 15px',
-            fontSize: '14px',
-            fontWeight: 'bold',
-            backgroundColor: '#ff4444',
-            color: 'white',
-            border: '2px solid #cc0000',
-            borderRadius: '5px',
-            cursor: 'pointer',
-            boxShadow: '0 2px 10px rgba(0,0,0,0.3)',
-            transition: 'all 0.3s ease'
+
+    function applyChaosStyle() {
+        if (chaosInterval) clearInterval(chaosInterval);
+
+        // Сдвигаем всю страницу вправо
+        document.body.style.marginLeft = '50px';
+        document.body.style.transform = 'rotate(0.5deg)';
+        document.body.style.transition = 'all 0.3s ease';
+
+        // Основной фон - градиент
+        document.body.style.background = `linear-gradient(45deg, ${getRandomColor()}, ${getRandomColor()})`;
+
+        // Хэдер - разноцветный
+        const pageWrapper = document.getElementById('page_wrapper');
+        if (pageWrapper) {
+            pageWrapper.style.background = `repeating-linear-gradient(45deg, ${getRandomColor()}, ${getRandomColor()} 10px, ${getRandomColor()} 10px, ${getRandomColor()} 20px)`;
+            pageWrapper.style.transform = `rotate(${getRandomRotation()}deg)`;
+        }
+
+        // Меню - радуга
+        const menu = document.getElementById('menu');
+        if (menu) {
+            menu.style.background = `linear-gradient(90deg, ${themePalette.rainbow.join(', ')})`;
+            menu.style.transform = 'skewX(-5deg)';
+        }
+
+        // Пункты меню - разноцветные с анимацией
+        const menuLinks = document.querySelectorAll('.lfr-nav-item > a'); 
+        menuLinks.forEach((link, index) => {
+            link.style.background = themePalette.rainbow[index % themePalette.rainbow.length];
+            link.style.color = '#000';
+            link.style.transform = `rotate(${getRandomRotation()}deg)`;
+            link.style.transition = 'all 0.3s ease';
+            
+            link.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.1) rotate(0deg)';
+                this.style.filter = 'brightness(1.2)';
+            });
+            
+            link.addEventListener('mouseleave', function() {
+                this.style.transform = `rotate(${getRandomRotation()}deg)`;
+                this.style.filter = 'brightness(1)';
+            });
         });
-        
-        button.addEventListener('click', function() {
-            if (!isChaosActive) {
-                breakTheSite();
-            } else {
-                fixTheSite();
+
+        // Футер - неоновый
+        const footer = document.querySelector('footer');
+        if (footer) {
+            footer.style.background = `linear-gradient(90deg, ${getRandomColor()}, ${getRandomColor()})`;
+            footer.style.borderTop = `15px dashed ${getRandomColor()}`;
+            footer.style.transform = 'rotate(-1deg)';
+        }
+
+        // Основной контент - пастельные тона с наклоном
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.style.background = `linear-gradient(135deg, ${getRandomColor()}, ${getRandomColor()})`;
+            mainContent.style.transform = 'rotate(0.3deg)';
+            mainContent.style.padding = '20px';
+            mainContent.style.borderRadius = '15px';
+        }
+
+        // Блоки с новостями - разные цвета и повороты
+        const newsBlocks = document.querySelectorAll('.news_box, .main_slider_holder, .events_box, .research_box');
+        newsBlocks.forEach(block => {
+            block.style.background = getRandomColor();
+            block.style.transform = `rotate(${getRandomRotation()}deg)`;
+            block.style.margin = '10px';
+            block.style.padding = '15px';
+            block.style.borderRadius = '10px';
+            block.style.border = `3px dotted ${getRandomColor()}`;
+        });
+
+        // Переворачиваем случайные текстовые элементы
+        const textElements = document.querySelectorAll('p, h1, h2, h3, span, div');
+        let flippedCount = 0;
+        textElements.forEach(element => {
+            if (element.textContent && element.textContent.trim().length > 5 && Math.random() > 0.7 && flippedCount < 10) {
+                element.style.transform = 'scaleY(-1)';
+                element.style.display = 'inline-block';
+                element.style.margin = '5px';
+                flippedCount++;
             }
         });
-        
-        button.addEventListener('mouseenter', function() {
-            button.style.transform = 'translateY(-2px)';
-            button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.4)';
+
+        // Слайдеры - разноцветные границы
+        const sliders = document.querySelectorAll('.slick-track, .institutes_slider_box');
+        sliders.forEach(slider => {
+            slider.style.border = `5px groove ${getRandomColor()}`;
+            slider.style.borderRadius = '20px';
         });
-        
-        button.addEventListener('mouseleave', function() {
-            button.style.transform = 'translateY(0)';
-            button.style.boxShadow = '0 2px 10px rgba(0,0,0,0.3)';
+
+        // Кнопки - радужные
+        const buttons = document.querySelectorAll('a.kai-btn-block, button.kai-btn-block, .kai-btn');
+        buttons.forEach(button => {
+            button.style.background = `linear-gradient(45deg, ${getRandomColor()}, ${getRandomColor()})`;
+            button.style.color = '#000';
+            button.style.border = `2px solid ${getRandomColor()}`;
+            button.style.transform = `rotate(${getRandomRotation()}deg)`;
         });
+
+        // Табы в research box - анимированные
+        function animateTabs() {
+            const allTabs = document.querySelectorAll('.research_box .tab_items .nav a');
+            allTabs.forEach(tab => {
+                const isActive = tab.classList.contains('active');
+                tab.style.background = isActive ? getRandomColor() : getRandomColor();
+                tab.style.color = '#000';
+                tab.style.border = `3px wavy ${getRandomColor()}`;
+                tab.style.transform = `scale(${isActive ? 1.1 : 1}) rotate(${getRandomRotation()}deg)`;
+            });
+        }
         
-        document.body.appendChild(button);
+        chaosInterval = setInterval(animateTabs, 2000);
+
+        // Стрелки слайдера
+        const arrows = document.querySelectorAll('span.slick-prev, span.slick-next');
+        arrows.forEach(arrow => {
+            arrow.style.background = getRandomColor();
+            arrow.style.borderRadius = '50%';
+            arrow.style.transform = 'scale(1.2)';
+        });
+
+        // Добавляем мерцание некоторым элементам
+        const blinkElements = document.querySelectorAll('.main_slider_holder, .news_box h2, .events_box h2');
+        blinkElements.forEach(element => {
+            element.style.animation = 'blink 2s infinite';
+        });
+
+        // Инжектим CSS анимации
+        if (!document.getElementById('chaos-styles')) {
+            const style = document.createElement('style');
+            style.id = 'chaos-styles';
+            style.textContent = `
+                @keyframes blink {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.5; }
+                }
+                @keyframes colorChange {
+                    0% { filter: hue-rotate(0deg); }
+                    100% { filter: hue-rotate(360deg); }
+                }
+                .rainbow-text {
+                    animation: colorChange 3s infinite linear;
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        // Добавляем радужный текст некоторым заголовкам
+        const headings = document.querySelectorAll('h1, h2, h3');
+        headings.forEach(heading => {
+            heading.classList.add('rainbow-text');
+        });
     }
-    
-    // Обновление состояния кнопки
-    function updateButtonState() {
-        const button = document.getElementById('chaos-control-btn');
-        if (button) {
-            if (isChaosActive) {
-                button.innerHTML = '🛠️ Починить сайт';
-                button.style.backgroundColor = '#44aa44';
-                button.style.borderColor = '#228822';
-            } else {
-                button.innerHTML = '🔧 Поломать сайт';
-                button.style.backgroundColor = '#ff4444';
-                button.style.borderColor = '#cc0000';
+
+    function removeChaosStyle() {
+        if (chaosInterval) {
+            clearInterval(chaosInterval);
+            chaosInterval = null;
+        }
+
+        // Убираем все кастомные стили
+        document.body.style.marginLeft = '';
+        document.body.style.transform = '';
+        document.body.style.background = '';
+        
+        const elementsToReset = [
+            document.body,
+            document.getElementById('header'),
+            document.getElementById('page_wrapper'),
+            document.getElementById('main-content'),
+            document.getElementById('menu'),
+            document.querySelector('footer'),
+            document.querySelector('.main_slider_holder'),
+            document.querySelector('.news_box'),
+            document.querySelector('.events_box'),
+            document.querySelector('.research_box'),
+            document.querySelector('.institutes_slider_box'),
+            ...document.querySelectorAll('.lfr-nav-item > a'),
+            ...document.querySelectorAll('a.kai-btn-block, button.kai-btn-block, .kai-btn'),
+            ...document.querySelectorAll('span.slick-prev, span.slick-next'),
+            ...document.querySelectorAll('.research_box .tab_items .nav a'),
+            ...document.querySelectorAll('p, h1, h2, h3, span, div')
+        ];
+
+        elementsToReset.forEach(element => {
+            if (element) {
+                element.style.cssText = '';
+                element.classList.remove('rainbow-text');
             }
+        });
+
+        // Убираем инжектнутые стили
+        const chaosStyles = document.getElementById('chaos-styles');
+        if (chaosStyles) {
+            chaosStyles.remove();
         }
     }
-    
-    // Добавляем базовые стили
-    function injectStyles() {
-        const style = document.createElement('style');
-        style.textContent = `
-            #chaos-control-btn {
-                font-family: Arial, sans-serif;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-    
-    // Горячие клавиши для отладки
-    function addKeyboardShortcuts() {
-        document.addEventListener('keydown', function(e) {
-            // Ctrl+Shift+L - поломать сайт
-            if (e.ctrlKey && e.shiftKey && e.key === 'L') {
-                e.preventDefault();
-                if (!isChaosActive) {
-                    breakTheSite();
-                }
-            }
-            // Ctrl+Shift+F - починить сайт
-            if (e.ctrlKey && e.shiftKey && e.key === 'F') {
-                e.preventDefault();
-                if (isChaosActive) {
-                    fixTheSite();
-                }
-            }
-        });
-    }
-    
-    // Инициализация
-    function initialize() {
-        injectStyles();
-        createControlButton();
-        addKeyboardShortcuts();
+
+    function updateToggleButton(isEnabled) {
+        if (!toggleButton) return;
         
-        console.log('🎯 Расширение "Контролируемый хаос" загружено!');
-        console.log('💡 Используйте кнопку в правом верхнем углу или горячие клавиши:');
-        console.log('   Ctrl+Shift+L - поломать сайт');
-        console.log('   Ctrl+Shift+F - починить сайт');
+        toggleButton.innerHTML = `<img 
+            src="${isEnabled ? icon_on : icon_off}" 
+            style="width:100%; height:100%; border-radius:50%;" 
+            alt="Переключатель хаоса">`;
+        
+        toggleButton.style.background = isEnabled ? 
+            'linear-gradient(45deg, #FF6B6B, #4ECDC4, #45B7D1)' : 
+            '#786262';
+        toggleButton.style.transform = isEnabled ? 'rotate(180deg)' : 'rotate(0deg)';
+        toggleButton.style.transition = 'all 0.5s ease';
     }
-    
-    // Запуск
+
+    function setStyleState(isEnabled) {
+        if (isEnabled) {
+            applyChaosStyle();
+        } else {
+            removeChaosStyle();
+        }
+        updateToggleButton(isEnabled);
+    }
+
+    function setupChaosController() {
+        if (document.getElementById('kai-chaos-toggle-btn')) return;
+        
+        toggleButton = document.createElement('button');
+        toggleButton.id = 'kai-chaos-toggle-btn';
+        
+        Object.assign(toggleButton.style, {
+            position: 'fixed',
+            top: '20px',
+            right: '20px',
+            zIndex: '9999',
+            width: '60px',
+            height: '60px',
+            padding: '0',
+            background: 'linear-gradient(45deg, #FF6B6B, #4ECDC4)',
+            border: '3px solid #fff',
+            borderRadius: '50%',
+            cursor: 'pointer',
+            boxShadow: '0 4px 15px rgba(0,0,0,0.3)',
+            transition: 'all 0.5s ease'
+        });
+
+        toggleButton.addEventListener('click', () => {
+            const currentState = (localStorage.getItem(STYLE_ENABLED_KEY) === 'true');
+            const newState = !currentState;
+            localStorage.setItem(STYLE_ENABLED_KEY, newState);
+            setStyleState(newState);
+        });
+
+        toggleButton.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1)';
+            this.style.boxShadow = '0 6px 20px rgba(0,0,0,0.4)';
+        });
+
+        toggleButton.addEventListener('mouseleave', function() {
+            const isEnabled = (localStorage.getItem(STYLE_ENABLED_KEY) === 'true');
+            this.style.transform = isEnabled ? 'rotate(180deg)' : 'scale(1)';
+        });
+
+        document.body.appendChild(toggleButton);
+
+        // Восстанавливаем состояние при загрузке
+        const savedState = localStorage.getItem(STYLE_ENABLED_KEY) === 'true';
+        setStyleState(savedState);
+    }
+
+    // Запускаем когда DOM готов
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initialize);
+        document.addEventListener('DOMContentLoaded', setupChaosController);
     } else {
-        initialize();
+        setupChaosController();
     }
 }
 
-// Запускаем контролируемый хаос
-unleashControlledChaos();
+Rainbow_Chaos_Mode();
