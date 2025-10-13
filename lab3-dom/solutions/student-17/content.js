@@ -5,7 +5,10 @@ function Rainbow_Chaos_Mode() {
     const themePalette = {
         rainbow: ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#98D8C8', '#F7DC6F'],
         neon: ['#FF00FF', '#00FFFF', '#FFFF00', '#FF00FF', '#00FF00', '#FF8000'],
-        pastel: ['#FFB6C1', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C', '#FFA07A']
+        pastel: ['#FFB6C1', '#87CEEB', '#98FB98', '#DDA0DD', '#F0E68C', '#FFA07A'],
+        light_grey: '#F0F0F0',
+        piglet: '#FFE6E6',
+        red: '#FF0000'
     };
     
     let toggleButton;
@@ -19,16 +22,21 @@ function Rainbow_Chaos_Mode() {
     }
 
     function getRandomRotation() {
-        return Math.random() * 10 - 5; // -5deg to +5deg
+        return Math.random() * 10 - 5;
     }
 
     function applyChaosStyle() {
         if (chaosInterval) clearInterval(chaosInterval);
-
-        // Сдвигаем всю страницу вправо
-        document.body.style.marginLeft = '50px';
-        document.body.style.transform = 'rotate(0.5deg)';
-        document.body.style.transition = 'all 0.3s ease';
+        
+        // Устанавливаем флаг что режим активен
+        isEnabled = true;
+        
+        // Даем время на полную загрузку страницы
+        setTimeout(() => {
+            safeApplyStyles();
+            applySpecificStyles();
+        }, 1000);
+    }
 
         // Основной фон - градиент
         document.body.style.background = `linear-gradient(45deg, ${getRandomColor()}, ${getRandomColor()})`;
@@ -94,6 +102,25 @@ function Rainbow_Chaos_Mode() {
             block.style.border = `3px dotted ${getRandomColor()}`;
         });
 
+        // Третий раздел - institutes_slider_box
+        const institutesSlider = document.querySelector('.institutes_slider_box');
+        if (institutesSlider) {
+            const institutesParent = institutesSlider.parentElement;
+            if (institutesParent) {
+                institutesParent.style.borderTop = `10px solid ${themePalette.light_grey}`;
+            }
+            institutesSlider.style.backgroundColor = themePalette.piglet;
+            const sliderContent = institutesSlider.querySelector('.slick-track');
+            if (sliderContent) {
+                for (const child of sliderContent.children) {
+                    child.style.border = `8px double ${themePalette.red}`;
+                    child.style.borderRadius = '50px';
+                    child.style.padding = '10px';
+                    child.style.margin = '0 10px';
+                }
+            }
+        }
+
         // Переворачиваем случайные текстовые элементы
         const textElements = document.querySelectorAll('p, h1, h2, h3, span, div');
         let flippedCount = 0;
@@ -150,26 +177,6 @@ function Rainbow_Chaos_Mode() {
             element.style.animation = 'blink 2s infinite';
         });
 
-        // Инжектим CSS анимации
-        if (!document.getElementById('chaos-styles')) {
-            const style = document.createElement('style');
-            style.id = 'chaos-styles';
-            style.textContent = `
-                @keyframes blink {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.5; }
-                }
-                @keyframes colorChange {
-                    0% { filter: hue-rotate(0deg); }
-                    100% { filter: hue-rotate(360deg); }
-                }
-                .rainbow-text {
-                    animation: colorChange 3s infinite linear;
-                }
-            `;
-            document.head.appendChild(style);
-        }
-
         // Добавляем радужный текст некоторым заголовкам
         const headings = document.querySelectorAll('h1, h2, h3');
         headings.forEach(heading => {
@@ -214,10 +221,19 @@ function Rainbow_Chaos_Mode() {
             }
         });
 
-        // Убираем инжектнутые стили
-        const chaosStyles = document.getElementById('chaos-styles');
-        if (chaosStyles) {
-            chaosStyles.remove();
+        // Особенная обработка для institutes_slider_box
+        const institutesSlider = document.querySelector('.institutes_slider_box');
+        if (institutesSlider) {
+            if (institutesSlider.parentElement) {
+                institutesSlider.parentElement.setAttribute('style', '');
+            }
+            institutesSlider.setAttribute('style', '');
+            const sliderContent = institutesSlider.querySelector('.slick-track');
+            if (sliderContent) {
+                for (const child of sliderContent.children) {
+                    child.setAttribute('style', '');
+                }
+            }
         }
     }
 
@@ -297,6 +313,5 @@ function Rainbow_Chaos_Mode() {
     } else {
         setupChaosController();
     }
-}
 
 Rainbow_Chaos_Mode();
