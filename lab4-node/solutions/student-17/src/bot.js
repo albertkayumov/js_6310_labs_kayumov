@@ -1,5 +1,5 @@
-const { Telegraf, session } = require('telegraf');
-const AdHandlers = require('./handlers');
+import { Telegraf, session } from 'telegraf';
+import AdHandlers from './handlers.js';
 
 class AdCreatorBot {
   constructor(token) {
@@ -44,4 +44,4 @@ class AdCreatorBot {
   }
 }
 
-module.exports = AdCreatorBot;
+export default AdCreatorBot;

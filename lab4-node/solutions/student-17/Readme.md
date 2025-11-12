@@ -31,7 +31,7 @@ Telegram бот для создания и управления рекламны
 ```bash
 # Клонируйте репозиторий
 git clone <repository-url>
-cd lab4-node/solutions/student-17/example
+cd lab4-node/solutions/student-17
 
 # Установите зависимости
 npm install
@@ -49,7 +49,7 @@ cp .env.example .env
 
 # Отредактируйте .env файл
 # Добавьте ваш токен бота от @BotFather
-BOT_TOKEN=your_actual_bot_token_here
+BOT_TOKEN=your_actual_bot_token
 ```
 
 ### 3. Получение токена бота
@@ -78,6 +78,8 @@ node src/server.js
 
 ## 📚 Доступные команды бота
 
+Ссылка на бота - @JSJSAK123_bot
+
 ### Основные команды
 - `/start` - Начало работы с ботом
 - `/create_ad` - Создание рекламного объявления
@@ -86,10 +88,9 @@ node src/server.js
 
 ### Процесс создания объявления
 1. Выбор платформы (Instagram, Facebook, Telegram, VK)
-2. Ввод текста объявления (макс. 200 символов)
-3. Указание бюджета кампании
-4. Автоматическая проверка на соответствие правилам
-5. Создание кампании с уникальным ID
+2. Ввод текста объявления (макс. N символов)
+3. Автоматическая проверка на соответствие правилам
+4. Создание кампании с уникальным ID
 
 ## 🧪 Тестирование и качество кода
 
@@ -103,15 +104,6 @@ npm run test:watch
 
 # Тесты с покрытием
 npm run test:coverage
-```
-
-### Проверка кода
-```bash
-# Проверка стиля кода
-npm run lint
-
-# Автоисправление ошибок
-npm run lint:fix
 ```
 
 ## 📁 Структура проекта
@@ -128,11 +120,12 @@ lab4-node/solutions/student-17/example/
 │   └── state.js
 ├── tests/
 │   ├── bot.test.js
+│   ├── constants.test.js
 │   ├── handlers.test.js
 │   ├── index.test.js
 │   └── state.test.js
 ├── env - мой ТОКЕН
-├── env.example
+├── env.example - ПРИМЕР ВВОДА ТОКЕНА
 ├── eslint.config.js
 ├── jest.config.json
 ├── package-lock.json
@@ -163,24 +156,18 @@ lab4-node/solutions/student-17/example/
 
 ### Создание кампании
 ```
-👤 Пользователь: /create_ad
-🤖 Бот: Выберите платформу...
-👤 Пользователь: Instagram  
-🤖 Бот: Введите текст объявления...
-👤 Пользователь: Новый продукт!
-🤖 Бот: Укажите бюджет...
-👤 Пользователь: 5000
-🤖 Бот: 🎉 Кампания создана! ID: 12345
+image 2-5
 ```
 
 ### Аналитика
 ```
-👤 Пользователь: /analytics
-🤖 Бот: 📊 Аналитика кампаний
-       • Активные: 3
-       • Потрачено: 15,000 руб.
-       • CTR: 2.3%
-       💡 Рекомендации: ...
+image 6 - если создана компания
+Если нет ни одной компании, бот предлодит создать ее)
+```
+
+### Старт и Помощь 
+```
+image 1
 ```
 
 ## 🐛 Решение проблем
@@ -225,7 +212,6 @@ console.log('Debug:', variable);
 ### Коммиты
 ```bash
 # Перед коммитом проверьте код
-npm run lint
 npm test
 
 # Добавление файлов
@@ -235,11 +221,6 @@ git add .
 git commit -m "feat: добавить создание кампаний"
 ```
 
-### Ветвление
-- `main` - стабильная версия
-- `develop` - разработка
-- `feature/*` - новые функции
-
 ## 📄 Лицензия
 
 MIT License - подробности в файле LICENSE.
@@ -248,13 +229,6 @@ MIT License - подробности в файле LICENSE.
 
 - Student-17
 - Рекламное агентство "AdCreator"
-
-## 🔗 Полезные ссылки
-
-- [Telegram Bot API](https://core.telegram.org/bots/api)
-- [Node.js Documentation](https://nodejs.org/docs/)
-- [Jest Testing Framework](https://jestjs.io/)
-- [ESLint Code Linter](https://eslint.org/)
 
 ---
 

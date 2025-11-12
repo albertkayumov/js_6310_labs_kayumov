@@ -1,5 +1,5 @@
-const { PLATFORMS, PLATFORM_RULES, AD_TEMPLATES } = require('./constants');
-const state = require('./state');
+import { PLATFORMS, PLATFORM_RULES, AD_TEMPLATES } from './constants.js';
+import state from './state.js';
 
 class AdHandlers {
   constructor(bot) {
@@ -207,4 +207,4 @@ class AdHandlers {
   }
 }
 
-module.exports = AdHandlers;
+export default AdHandlers;

@@ -1,10 +1,15 @@
-const CampaignState = require('../src/state');
+import { jest } from '@jest/globals';
 
 describe('CampaignState Singleton', () => {
   // Сохраняем оригинальные данные чтобы восстановить после тестов
   let originalData;
+  let CampaignState;
 
-  beforeAll(() => {
+  beforeAll(async () => {
+    // Импортируем модуль
+    const CampaignStateModule = await import('../src/state.js');
+    CampaignState = CampaignStateModule.default;
+    
     // Сохраняем оригинальное состояние
     originalData = {
       userCampaigns: new Map(CampaignState.userCampaigns),
@@ -189,9 +194,12 @@ describe('CampaignState Singleton', () => {
   });
 
   describe('Singleton behavior', () => {
-    test('should be the same instance across requires', () => {
-      const instance1 = require('../src/state');
-      const instance2 = require('../src/state');
+    test('should be the same instance across imports', async () => {
+      const instance1Module = await import('../src/state.js');
+      const instance1 = instance1Module.default;
+      
+      const instance2Module = await import('../src/state.js');
+      const instance2 = instance2Module.default;
       
       expect(instance1).toBe(instance2);
       expect(instance1.addCampaign).toBe(instance2.addCampaign);

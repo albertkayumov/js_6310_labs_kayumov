@@ -1,11 +1,11 @@
-const PLATFORMS = {
+export const PLATFORMS = {
   INSTAGRAM: 'instagram',
-  FACEBOOK: 'facebook',
+  FACEBOOK: 'facebook', 
   TELEGRAM: 'telegram',
   VK: 'vk'
 };
 
-const PLATFORM_RULES = {
+export const PLATFORM_RULES = {
   instagram: {
     maxLength: 2200,
     hashtagsLimit: 30,
@@ -13,55 +13,36 @@ const PLATFORM_RULES = {
   },
   facebook: {
     maxLength: 5000,
-    hashtagsLimit: 0,
-    imageRequired: false
+    hashtagsLimit: 10,
+    imageRequired: true
   },
   telegram: {
     maxLength: 4096,
-    hashtagsLimit: 0,
+    hashtagsLimit: 20,
     imageRequired: false
   },
   vk: {
-    maxLength: 4000,
+    maxLength: 5000,
     hashtagsLimit: 10,
-    imageRequired: false
+    imageRequired: true
   }
 };
 
-const AD_TEMPLATES = {
-  [PLATFORMS.INSTAGRAM]: {
-    name: "Instagram Post",
-    structure: "🎯 Заголовок\n\n📝 Основной текст\n\n🌟 Призыв к действию\n\n#{хэштеги}",
-    example: "🎯 Распродажа 50%!\n\n📝 Только этой недели скидки на всю коллекцию!\n\n🌟 Успей купить!\n\n#распродажа #скидки #мода"
+export const AD_TEMPLATES = {
+  instagram: {
+    structure: 'Заголовок → Описание → Призыв к действию → Хэштеги',
+    example: '🔥 Акция! Только сегодня скидка 50%!\n\nУспей купить лучшие товары по выгодной цене!\n\n👉 Переходи по ссылке в профиле\n\n#акция #скидка #покупки'
   },
-  [PLATFORMS.FACEBOOK]: {
-    name: "Facebook Post", 
-    structure: "Заголовок\n\nОсновной текст с деталями\n\nСсылка и призыв к действию",
-    example: "Новая коллекция уже в магазине!\n\nМы подготовили для вас самые модные новинки сезона. Качество гарантировано!\n\nПодробнее: example.com\n#новинки"
+  facebook: {
+    structure: 'Заголовок → Основной текст → Ссылка → Хэштеги',
+    example: '🎉 Специальное предложение для наших подписчиков!\n\nПолучите эксклюзивный доступ к новым продуктам первыми. Ограниченное количество!\n\nПодробности: ссылка\n\n#новинка #эксклюзив'
   },
-  [PLATFORMS.TELEGRAM]: {
-    name: "Telegram Post",
-    structure: "📢 Заголовок\n\n📋 Описание\n\n🔗 Ссылка\n\n🏷️ Теги",
-    example: "📢 Новое поступление!\n\n📋 В нашем магазине появились новые модели обуви\n\n🔗 Подробнее: example.com\n\n🏷️ #обувь #мода"
+  telegram: {
+    structure: 'Заголовок → Текст → Призыв к действию',
+    example: '🚀 Новый запуск!\n\nПредставляем наш новый сервис для бизнеса. Увеличивайте эффективность вашей команды с помощью современных инструментов.\n\nНачать бесплатно: @yourbot'
   },
-  [PLATFORMS.VK]: {
-    name: "VK Post",
-    structure: "Заголовок\n\nТекст поста\n\nХэштеги",
-    example: "Специальное предложение!\n\nТолько для подписчиков скидка 20% на весь ассортимент. Акция действует до конца недели!\n\n#акция #скидка #спецпредложение"
+  vk: {
+    structure: 'Заголовок → Текст → Кнопка действия → Хэштеги',
+    example: '📢 Важное объявление!\n\nМы запускаем новую программу лояльности для постоянных клиентов. Получайте бонусы за каждую покупку!\n\nУзнать больше: ссылка\n\n#бонусы #лояльность'
   }
-};
-
-const ANALYTICS_METRICS = [
-  'reach',
-  'engagement',
-  'clicks',
-  'conversions',
-  'ctr'
-];
-
-module.exports = {
-  PLATFORMS,
-  PLATFORM_RULES,
-  AD_TEMPLATES,
-  ANALYTICS_METRICS
 };

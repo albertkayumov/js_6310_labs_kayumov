@@ -1,5 +1,8 @@
-require('dotenv').config();
-const AdCreatorBot = require('./bot');
+import { config } from 'dotenv';
+import AdCreatorBot from './bot.js';
+
+// Загружаем .env файл
+config();
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 

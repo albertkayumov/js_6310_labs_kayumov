@@ -49,4 +49,4 @@ class CampaignState {
 }
 
 // Экспортируем экземпляр как синглтон
-module.exports = new CampaignState();
+export default new CampaignState();

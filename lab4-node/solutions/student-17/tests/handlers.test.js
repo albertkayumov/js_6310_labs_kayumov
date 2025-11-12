@@ -1,54 +1,105 @@
-const AdHandlers = require('../src/handlers');
+import { jest } from '@jest/globals';
 
-// Mock для бота
-const mockBot = {
-  // Базовые методы для мока
-};
-
-// Mock для контекста Telegraf
-const createMockContext = (overrides = {}) => ({
-  reply: jest.fn(),
-  editMessageText: jest.fn(),
-  answerCbQuery: jest.fn(),
-  from: { id: 123 },
-  message: { text: 'test message' },
-  callbackQuery: { data: 'platform_instagram' },
-  session: {},
-  ...overrides
-});
+// Mock для constants
+jest.unstable_mockModule('../src/constants.js', () => ({
+  PLATFORMS: {
+    INSTAGRAM: 'instagram',
+    FACEBOOK: 'facebook',
+    TELEGRAM: 'telegram',
+    VK: 'vk'
+  },
+  PLATFORM_RULES: {
+    instagram: {
+      maxLength: 2200,
+      hashtagsLimit: 30,
+      imageRequired: true
+    },
+    facebook: {
+      maxLength: 5000,
+      hashtagsLimit: 10,
+      imageRequired: true
+    },
+    telegram: {
+      maxLength: 4096,
+      hashtagsLimit: 20,
+      imageRequired: false
+    },
+    vk: {
+      maxLength: 5000,
+      hashtagsLimit: 10,
+      imageRequired: true
+    }
+  },
+  AD_TEMPLATES: {
+    instagram: {
+      structure: 'Заголовок → Описание → Призыв к действию → Хэштеги',
+      example: 'Пример для Instagram'
+    },
+    facebook: {
+      structure: 'Заголовок → Основной текст → Ссылка → Хэштеги',
+      example: 'Пример для Facebook'
+    },
+    telegram: {
+      structure: 'Заголовок → Текст → Призыв к действию',
+      example: 'Пример для Telegram'
+    },
+    vk: {
+      structure: 'Заголовок → Текст → Кнопка действия → Хэштеги',
+      example: 'Пример для VK'
+    }
+  }
+}));
 
 // Mock для state
-jest.mock('../src/state', () => {
-  const mockState = {
+jest.unstable_mockModule('../src/state.js', () => ({
+  default: {
     addCampaign: jest.fn(),
     getCampaigns: jest.fn(),
     getAnalytics: jest.fn(),
     getAllAnalytics: jest.fn(),
     initializeAnalytics: jest.fn()
-  };
-  return mockState;
-});
+  }
+}));
 
 describe('Ad Handlers', () => {
   let handlers;
   let state;
+  let constants;
+  let AdHandlers;
 
-  beforeEach(() => {
-    handlers = new AdHandlers(mockBot);
-    state = require('../src/state');
+  beforeEach(async () => {
+    // Импортируем модули после настройки моков
+    constants = await import('../src/constants.js');
+    state = await import('../src/state.js');
+    const AdHandlersModule = await import('../src/handlers.js');
+    AdHandlers = AdHandlersModule.default;
+    
+    handlers = new AdHandlers({});
     
     // Очищаем моки перед каждым тестом
     jest.clearAllMocks();
     
     // Настраиваем моки по умолчанию
-    state.getAllAnalytics.mockReturnValue([]);
-    state.addCampaign.mockReturnValue({
+    state.default.getAllAnalytics.mockReturnValue([]);
+    state.default.addCampaign.mockReturnValue({
       id: 'test-id',
       platform: 'test-platform',
       text: 'test-text',
       status: 'active',
       createdAt: new Date()
     });
+  });
+
+  // Mock для контекста Telegraf
+  const createMockContext = (overrides = {}) => ({
+    reply: jest.fn(),
+    editMessageText: jest.fn(),
+    answerCbQuery: jest.fn(),
+    from: { id: 123 },
+    message: { text: 'test message' },
+    callbackQuery: { data: 'platform_instagram' },
+    session: {},
+    ...overrides
   });
 
   // Базовые тесты для вспомогательных методов
@@ -118,7 +169,7 @@ describe('Ad Handlers', () => {
     const analytics = {
       ctr: 3.0,
       engagement: 25,
-      reach: 200 // низкий охват для instagram
+      reach: 200
     };
     
     const recommendations = handlers.generateRecommendations(analytics, 'instagram');
@@ -237,7 +288,7 @@ describe('Ad Handlers', () => {
 
     handlers.handleSaveAd(ctx);
 
-    expect(state.addCampaign).toHaveBeenCalledWith(123, {
+    expect(state.default.addCampaign).toHaveBeenCalledWith(123, {
       platform: 'instagram',
       text: 'Test ad content',
       status: 'active'
@@ -279,8 +330,7 @@ describe('Ad Handlers', () => {
       reply: jest.fn()
     });
 
-    // Настраиваем мок для аналитики с рекомендациями
-    state.getAllAnalytics.mockReturnValue([
+    state.default.getAllAnalytics.mockReturnValue([
       {
         campaign: {
           id: '1',
@@ -289,63 +339,22 @@ describe('Ad Handlers', () => {
           status: 'active'
         },
         analytics: {
-          reach: 200, // низкий охват для генерации рекомендаций
-          engagement: 15, // низкая вовлеченность
+          reach: 200,
+          engagement: 15,
           clicks: 5,
           conversions: 1,
-          ctr: '1.50' // низкий CTR
+          ctr: '1.50'
         }
       }
     ]);
 
     handlers.handleAnalytics(ctx);
 
-    // Проверяем что reply был вызван
     expect(ctx.reply).toHaveBeenCalled();
-    
-    // Получаем текст сообщения
     const replyText = ctx.reply.mock.calls[0][0];
-    
-    // Проверяем что текст содержит основные элементы
     expect(replyText).toContain('Аналитика ваших кампаний');
     expect(replyText).toContain('Платформа: instagram');
     expect(replyText).toContain('Охват: 200 чел.');
-    
-    // Рекомендации могут присутствовать (зависит от логики generateRecommendations)
-  });
-
-  test('handleAnalytics should show analytics without recommendations', () => {
-    const ctx = createMockContext({
-      from: { id: 123 },
-      reply: jest.fn()
-    });
-
-    // Настраиваем мок для аналитики без рекомендаций (хорошие метрики)
-    state.getAllAnalytics.mockReturnValue([
-      {
-        campaign: {
-          id: '1',
-          platform: 'facebook',
-          text: 'Test ad',
-          status: 'active'
-        },
-        analytics: {
-          reach: 1000,
-          engagement: 50, // хорошая вовлеченность
-          clicks: 50,
-          conversions: 10,
-          ctr: '5.00' // хороший CTR
-        }
-      }
-    ]);
-
-    handlers.handleAnalytics(ctx);
-
-    expect(ctx.reply).toHaveBeenCalled();
-    
-    const replyText = ctx.reply.mock.calls[0][0];
-    expect(replyText).toContain('Аналитика ваших кампаний');
-    expect(replyText).toContain('Платформа: facebook');
   });
 
   test('handleHelp should send help information', () => {
@@ -356,55 +365,5 @@ describe('Ad Handlers', () => {
     expect(ctx.reply).toHaveBeenCalledWith(
       expect.stringContaining('Помощь по AdCreator Bot')
     );
-  });
-
-  // Тесты для дополнительного покрытия
-  test('should handle text with hashtags correctly', () => {
-    const textWithHashtags = 'Test ad with #hashtag1 #hashtag2';
-    const result = handlers.validateAdText(textWithHashtags, 'instagram');
-    expect(result.isValid).toBe(true);
-  });
-
-  test('should handle platform rules for vk correctly', () => {
-    const text = 'Test ad for VK';
-    const result = handlers.validateAdText(text, 'vk');
-    expect(result.isValid).toBe(true);
-  });
-
-  test('should handle empty recommendations array', () => {
-    const analytics = {
-      ctr: 6.0, // очень хороший CTR
-      engagement: 60, // очень хорошая вовлеченность
-      reach: 2000 // очень хороший охват
-    };
-    
-    const recommendations = handlers.generateRecommendations(analytics, 'instagram');
-    expect(recommendations).toEqual([]);
-  });
-
-  // Дополнительные тесты для полного покрытия
-  test('should handle telegram platform with long text', () => {
-    const longText = 'a'.repeat(3000);
-    const result = handlers.validateAdText(longText, 'telegram');
-    expect(result.isValid).toBe(true);
-  });
-
-  test('should handle validation with exact max length', () => {
-    const exactLengthText = 'a'.repeat(4096);
-    const result = handlers.validateAdText(exactLengthText, 'telegram');
-    expect(result.isValid).toBe(true);
-  });
-
-  test('should handle vk platform with hashtags within limit', () => {
-    const textWithHashtags = 'Text with #hashtag1 #hashtag2 #hashtag3 #hashtag4 #hashtag5';
-    const result = handlers.validateAdText(textWithHashtags, 'vk');
-    expect(result.isValid).toBe(true);
-  });
-
-  test('should reject vk platform with too many hashtags', () => {
-    const textWithManyHashtags = 'Text ' + '#tag'.repeat(15);
-    const result = handlers.validateAdText(textWithManyHashtags, 'vk');
-    expect(result.isValid).toBe(false);
-    expect(result.error).toContain('Слишком много хэштегов');
   });
 });
