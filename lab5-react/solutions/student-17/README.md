@@ -150,18 +150,6 @@ npm run dev
 
 ## Примеры работы приложения
 
-### Сетка кейсов портфолио
-![Сетка кейсов](pictures-for-readme/portfolio-grid.png)
-
-### Карточка кейса
-![Карточка кейса](pictures-for-readme/case-card.png)
-
-### Модальное окно с галереей
-![Модальное окно](pictures-for-readme/modal-gallery.png)
-
-### Адаптивный дизайн
-![Адаптивный дизайн](pictures-for-readme/responsive.png)
-
 ## Тестирование
 
 ```bash
