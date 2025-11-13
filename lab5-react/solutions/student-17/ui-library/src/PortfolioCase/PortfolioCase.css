@@ -1,0 +1,142 @@
+.portfolio-case {
+  cursor: pointer;
+  max-width: 400px;
+  margin: 16px;
+}
+
+.portfolio-case__image-container {
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+}
+
+.portfolio-case__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.portfolio-case:hover .portfolio-case__image {
+  transform: scale(1.05);
+}
+
+.portfolio-case__content {
+  padding: 16px;
+}
+
+.portfolio-case__title {
+  margin: 0 0 12px 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.portfolio-case__description {
+  margin: 0 0 12px 0;
+  color: #666;
+  line-height: 1.4;
+}
+
+.portfolio-case__characteristics {
+  margin: 16px 0;
+}
+
+.portfolio-case__characteristics h4 {
+  margin: 0 0 8px 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.portfolio-case__characteristics ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.portfolio-case__characteristics li {
+  margin-bottom: 4px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.portfolio-case__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.portfolio-case__btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+  flex: 1;
+}
+
+.portfolio-case__btn--details {
+  background-color: #f8f9fa;
+  color: #333;
+  border: 1px solid #dee2e6;
+}
+
+.portfolio-case__btn--details:hover {
+  background-color: #e9ecef;
+}
+
+.portfolio-case__btn--order {
+  background-color: #007bff;
+  color: white;
+}
+
+.portfolio-case__btn--order:hover {
+  background-color: #0056b3;
+}
+
+/* Full view styles */
+.portfolio-case__full-view {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.portfolio-case__full-view-content {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  position: relative;
+}
+
+.portfolio-case__close-btn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portfolio-case__close-btn:hover {
+  color: #333;
+  background-color: #f8f9fa;
+  border-radius: 50%;
+}
