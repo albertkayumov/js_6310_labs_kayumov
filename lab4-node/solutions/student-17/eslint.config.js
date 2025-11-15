@@ -1,9 +1,12 @@
 import js from '@eslint/js';
 import globals from 'globals';
+import { defineConfig } from 'eslint/config';
 
-export default [
+export default defineConfig([
   { 
-    files: ['**/*.js'],
+    files: ['**/*.{js,mjs,cjs}'],
+    plugins: { js },
+    extends: ['js/recommended'],
     languageOptions: {
       ecmaVersion: 'latest',
       sourceType: 'module',
@@ -11,16 +14,27 @@ export default [
         ...globals.node,
         ...globals.jest
       }
-    },
+    }
+  },
+  {
     rules: {
-      ...js.configs.recommended.rules,
-      'indent': ['error', 2],
+      'indent': [
+        'error',
+        2,
+        {
+          'FunctionDeclaration': {
+            'parameters': 'first'
+          },
+          'MemberExpression': 2
+        }
+      ],
       'linebreak-style': ['error', 'unix'],
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],
       'no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
       'no-console': 'warn',
       'no-undef': 'error',
+      'no-var': 'error',
       'comma-dangle': ['error', 'never'],
       'arrow-spacing': 'error',
       'object-curly-spacing': ['error', 'always'],
@@ -43,4 +57,4 @@ export default [
       'build/**'
     ]
   }
-];
+]);

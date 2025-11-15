@@ -1,9 +1,7 @@
-import { jest } from '@jest/globals';
-
 describe('Constants', () => {
   let constants;
 
-  beforeAll(async () => {
+  beforeAll(async() => {
     constants = await import('../src/constants.js');
   });
 

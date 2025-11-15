@@ -20,7 +20,7 @@ describe('AdCreator Bot', () => {
   let Telegraf;
   let session;
 
-  beforeEach(async () => {
+  beforeEach(async() => {
     jest.resetModules();
     
     // Создаем мок для telegraf
@@ -71,7 +71,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     expect(mockBotInstance.start).toHaveBeenCalledWith(expect.any(Function));
     expect(mockBotInstance.command).toHaveBeenCalledWith('create_ad', expect.any(Function));
@@ -91,7 +91,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     expect(mockBotInstance.action).toHaveBeenCalledWith(/platform_/, expect.any(Function));
     expect(mockBotInstance.action).toHaveBeenCalledWith('save_ad', expect.any(Function));
@@ -110,7 +110,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     expect(mockBotInstance.on).toHaveBeenCalledWith('text', expect.any(Function));
   });
@@ -130,7 +130,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     expect(session).toHaveBeenCalled();
     expect(mockBotInstance.use).toHaveBeenCalledWith(mockSessionMiddleware);
@@ -172,7 +172,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     // Получаем обработчик для cancel_ad
     const cancelAdHandler = mockBotInstance.action.mock.calls.find(
@@ -204,7 +204,7 @@ describe('AdCreator Bot', () => {
 
     Telegraf.mockImplementation(() => mockBotInstance);
 
-    const bot = new AdCreatorBot('test_token');
+    new AdCreatorBot('test_token');
     
     // Получаем обработчик для cancel_ad
     const cancelAdHandler = mockBotInstance.action.mock.calls.find(

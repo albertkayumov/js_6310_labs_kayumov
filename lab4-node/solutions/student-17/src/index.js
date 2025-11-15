@@ -7,6 +7,7 @@ config();
 const BOT_TOKEN = process.env.BOT_TOKEN;
 
 if (!BOT_TOKEN) {
+  // eslint-disable-next-line no-console
   console.error('❌ Ошибка: BOT_TOKEN не установлен в переменных окружения');
   process.exit(1);
 }

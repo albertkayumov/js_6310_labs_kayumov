@@ -40,6 +40,7 @@ class AdCreatorBot {
 
   launch() {
     this.bot.launch();
+    // eslint-disable-next-line no-console
     console.log('🤖 AdCreator Bot запущен!');
   }
 }

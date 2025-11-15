@@ -1,11 +1,9 @@
-import { jest } from '@jest/globals';
-
 describe('CampaignState Singleton', () => {
   // Сохраняем оригинальные данные чтобы восстановить после тестов
   let originalData;
   let CampaignState;
 
-  beforeAll(async () => {
+  beforeAll(async() => {
     // Импортируем модуль
     const CampaignStateModule = await import('../src/state.js');
     CampaignState = CampaignStateModule.default;
@@ -194,7 +192,7 @@ describe('CampaignState Singleton', () => {
   });
 
   describe('Singleton behavior', () => {
-    test('should be the same instance across imports', async () => {
+    test('should be the same instance across imports', async() => {
       const instance1Module = await import('../src/state.js');
       const instance1 = instance1Module.default;
       

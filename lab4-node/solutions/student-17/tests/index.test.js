@@ -35,7 +35,7 @@ describe('Index.js', () => {
   //   // Этот тест вызывает проблемы, убираем его
   // });
 
-  test('should initialize bot when BOT_TOKEN is present', async () => {
+  test('should initialize bot when BOT_TOKEN is present', async() => {
     process.env.BOT_TOKEN = 'valid_token';
     
     const mockBotInstance = {
@@ -56,7 +56,7 @@ describe('Index.js', () => {
     expect(process.once).toHaveBeenCalledWith('SIGTERM', expect.any(Function));
   });
 
-  test('should setup graceful shutdown handlers correctly', async () => {
+  test('should setup graceful shutdown handlers correctly', async() => {
     process.env.BOT_TOKEN = 'test_token';
     
     const mockBotInstance = {

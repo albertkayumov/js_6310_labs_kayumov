@@ -64,12 +64,10 @@ jest.unstable_mockModule('../src/state.js', () => ({
 describe('Ad Handlers', () => {
   let handlers;
   let state;
-  let constants;
   let AdHandlers;
 
-  beforeEach(async () => {
+  beforeEach(async() => {
     // Импортируем модули после настройки моков
-    constants = await import('../src/constants.js');
     state = await import('../src/state.js');
     const AdHandlersModule = await import('../src/handlers.js');
     AdHandlers = AdHandlersModule.default;
