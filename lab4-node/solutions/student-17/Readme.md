@@ -45,7 +45,7 @@ solutions/student-17/
 │   ├── index.test.js
 │   └── state.test.js
 ├── .env (Ваш **BOT_TOKEN**)
-├── .env.example
+├── .env.example 
 ├── eslint.config.js
 ├── jest.config.json
 ├── package-lock.json
