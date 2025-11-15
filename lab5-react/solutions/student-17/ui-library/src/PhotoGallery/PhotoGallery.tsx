@@ -1,31 +1,31 @@
-import React, { useState } from 'react';
-import './PhotoGallery.css';
+import React, { useState } from 'react'
+import './PhotoGallery.css'
 
 export interface PhotoGalleryProps {
   images: string[];
 }
 
 const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images }) => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
 
   const handlePrevious = () => {
     setSelectedImageIndex(prev => 
       prev === 0 ? images.length - 1 : prev - 1
-    );
-  };
+    )
+  }
 
   const handleNext = () => {
     setSelectedImageIndex(prev => 
       prev === images.length - 1 ? 0 : prev + 1
-    );
-  };
+    )
+  }
 
   const handleThumbnailClick = (index: number) => {
-    setSelectedImageIndex(index);
-  };
+    setSelectedImageIndex(index)
+  }
 
   if (images.length === 0) {
-    return <div className="photo-gallery__empty">Нет изображений</div>;
+    return <div className="photo-gallery__empty">Нет изображений</div>
   }
 
   return (
@@ -76,7 +76,7 @@ const PhotoGallery: React.FC<PhotoGalleryProps> = ({ images }) => {
         </div>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default PhotoGallery;
+export default PhotoGallery

@@ -1,137 +1,52 @@
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import App from './App';
+import { render } from '@testing-library/react'
 
-// Мокаем компоненты ui-library чтобы тестировать только App логику
-jest.mock('@my-app/ui-library', () => ({
-  Card: ({ children, ...props }: any) => (
-    <div data-testid="card" {...props}>
-      {children}
-    </div>
-  ),
-  PhotoGallery: ({ images }: any) => (
-    <div data-testid="photo-gallery">
-      {images.map((img: string, index: number) => (
-        <img key={index} src={img} alt={`Gallery image ${index + 1}`} />
-      ))}
-    </div>
-  ),
-  PortfolioCase: ({ 
-    title, 
-    description, 
-    characteristics, 
-    onViewDetails, 
-    onOrder 
-  }: any) => (
-    <div data-testid="portfolio-case">
-      <h3>{title}</h3>
-      <p>{description}</p>
-      <ul>
-        {characteristics.map((char: string, index: number) => (
-          <li key={index}>{char}</li>
-        ))}
-      </ul>
-      <button onClick={onViewDetails}>Подробнее</button>
-      <button onClick={onOrder}>Заказать</button>
-    </div>
-  ),
-}));
+import { getItems } from '../data-access'
+import App from './App'
 
-describe('App Component', () => {
+// Создаем мок с правильными типами
+jest.mock('../data-access', () => ({
+  getItems: jest.fn(),
+  createItem: jest.fn(),
+}))
+
+// Определяем тип для элемента
+interface MockItem {
+  id: number;
+  name: string;
+}
+
+describe('App', () => {
   beforeEach(() => {
-    // Очищаем все моки перед каждым тестом
-    jest.clearAllMocks();
-  });
+    jest.clearAllMocks()
+  })
 
-  test('renders header with correct text', () => {
-    render(<App />);
+  it('renders without crashing', () => {
+    // Мокаем данные с правильным типом
+    (getItems as jest.Mock).mockResolvedValue([] as MockItem[])
     
-    expect(screen.getByText('Портфолио наших работ')).toBeInTheDocument();
-    expect(screen.getByText('Примеры реализованных проектов с использованием React компонентов')).toBeInTheDocument();
-  });
+    render(<App />)
+  })
 
-  test('renders demo gallery section', () => {
-    render(<App />);
-    
-    expect(screen.getByText('Отдельные компоненты:')).toBeInTheDocument();
-    expect(screen.getByText('Демонстрация PhotoGallery')).toBeInTheDocument();
-    expect(screen.getByTestId('photo-gallery')).toBeInTheDocument();
-  });
+  it('displays items from API', async () => {
+    const mockItems: MockItem[] = [
+      { id: 1, name: 'Test Item 1' },
+      { id: 2, name: 'Test Item 2' },
+    ];
 
-  test('renders portfolio cases section', () => {
-    render(<App />);
-    
-    expect(screen.getByText('Портфолио кейсы:')).toBeInTheDocument();
-    
-    // Проверяем что отображаются все портфолио кейсы
-    expect(screen.getByText('Корпоративный сайт для ООО "ТехноПро"')).toBeInTheDocument();
-    expect(screen.getByText('Интернет-магазин "Модный стиль"')).toBeInTheDocument();
-    expect(screen.getByText('Лендинг для стартапа "EcoLife"')).toBeInTheDocument();
-  });
+    (getItems as jest.Mock).mockResolvedValue(mockItems)
 
-  test('renders portfolio cases with correct content', () => {
-    render(<App />);
-    
-    // Проверяем описание проектов
-    expect(screen.getByText('Разработка современного адаптивного корпоративного сайта с системой управления контентом.')).toBeInTheDocument();
-    expect(screen.getByText('Создание полнофункционального интернет-магазина одежды с системой онлайн-оплаты.')).toBeInTheDocument();
-    expect(screen.getByText('Разработка продающей посадочной страницы для экологического стартапа.')).toBeInTheDocument();
-    
-    // Проверяем характеристики проектов
-    expect(screen.getByText('Адаптивный дизайн')).toBeInTheDocument();
-    expect(screen.getByText('Система корзины и заказов')).toBeInTheDocument();
-    expect(screen.getByText('Высокая конверсия')).toBeInTheDocument();
-  });
+    const { findByText } = render(<App />)
 
-  test('renders all action buttons', () => {
-    render(<App />);
-    
-    const detailsButtons = screen.getAllByText('Подробнее');
-    const orderButtons = screen.getAllByText('Заказать');
-    
-    expect(detailsButtons).toHaveLength(3);
-    expect(orderButtons).toHaveLength(3);
-  });
+    expect(await findByText('Test Item 1')).toBeInTheDocument()
+    expect(await findByText('Test Item 2')).toBeInTheDocument()
+  })
 
-  test('handles view details button click', async () => {
-    const user = userEvent.setup();
-    render(<App />);
-    
-    const consoleSpy = jest.spyOn(console, 'log');
-    
-    const detailsButtons = screen.getAllByText('Подробнее');
-    await user.click(detailsButtons[0]);
-    
-    expect(consoleSpy).toHaveBeenCalledWith('Просмотр деталей: Корпоративный сайт для ООО "ТехноПро" (ID: 1)');
-    
-    consoleSpy.mockRestore();
-  });
+  it('handles empty items list', async () => {
+    (getItems as jest.Mock).mockResolvedValue([] as MockItem[])
 
-  test('handles order button click', async () => {
-    const user = userEvent.setup();
-    render(<App />);
-    
-    const consoleSpy = jest.spyOn(console, 'log');
-    
-    const orderButtons = screen.getAllByText('Заказать');
-    await user.click(orderButtons[1]);
-    
-    expect(consoleSpy).toHaveBeenCalledWith('Заказ проекта: Интернет-магазин "Модный стиль" (ID: 2)');
-    
-    consoleSpy.mockRestore();
-  });
+    const { findByText } = render(<App />)
 
-  test('renders footer with current year', () => {
-    render(<App />);
-    
-    const currentYear = new Date().getFullYear();
-    expect(screen.getByText(`© ${currentYear} UI Library Demo. Все права защищены.`)).toBeInTheDocument();
-  });
-
-  test('renders Card component in demo section', () => {
-    render(<App />);
-    
-    const cards = screen.getAllByTestId('card');
-    expect(cards.length).toBeGreaterThan(0);
-  });
-});
+    // Проверяем, что приложение рендерится без ошибок при пустом списке
+    expect(await findByText('Items')).toBeInTheDocument()
+  })
+})

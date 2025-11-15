@@ -1,53 +1,3 @@
-solution/student-17/
-└── 17.md
-└── README.md
-└── frontend/
-    ├── .gitignore
-    ├── eslint.config.js
-    ├── index.html
-    ├── jest.config.ts
-    ├── package.json
-    ├── public/
-    │   └── vite.svg
-    ├── src/                          # Исходный код 
-    │   ├── App.css
-    │   ├── App.test.tsx
-    │   ├── App.tsx
-    │   ├── assets/
-    │   │   └── react.svg
-    │   ├── index.css
-    │   ├── main.tsx
-    │   └── setupTests.ts
-    ├── tsconfig.app.json
-    ├── tsconfig.json
-    ├── tsconfig.node.json
-    └── vite.config.ts
-
-└── pictures-for-readme/
-
-└── ui-library/
-    ├── .gitignore
-    ├── eslint.config.js
-    ├── jest.config.ts
-    ├── package.json
-    ├── src/
-    │   ├── PortfolioCase/              # ЗАМЕНИЛ ProductCard на PortfolioCase
-    │   │   ├── PortfolioCase.css
-    │   │   ├── PortfolioCase.test.tsx
-    │   │   └── PortfolioCase.tsx
-    │   ├── PhotoGallery/               # ОСТАВИЛ для галереи изображений
-    │   │   ├── PhotoGallery.css
-    │   │   ├── PhotoGallery.test.tsx
-    │   │   └── PhotoGallery.tsx
-    │   ├── Card/                       # ОСТАВИЛ как базовый компонент
-    │   │   ├── Card.css
-    │   │   ├── Card.test.tsx
-    │   │   └── Card.tsx
-    │   ├── index.ts
-    │   └── setupTests.ts
-    ├── tsconfig.json
-    └── vite.config.ts
-
 # Описание проекта
 
 Этот проект представляет собой библиотеку React компонентов и демонстрационное приложение для отображения кейсов портфолио. Проект разделен на две основные части:
@@ -104,7 +54,7 @@ solution/student-17/
 
 ### Предварительные требования
 
-- Node.js 18+
+- Node.js
 - npm
 
 ### Установка и запуск
@@ -172,3 +122,54 @@ npm run test
 - ✅ **Доступность** - поддержка клавиатурной навигации
 - ✅ **Модульная архитектура** - ES6 импорты/экспорты
 - ✅ **CSS Modules** - изолированные стили компонентов
+
+## Структура
+
+solution/student-17/
+└── README.md
+└── frontend/
+    ├── .gitignore
+    ├── eslint.config.js
+    ├── index.html
+    ├── jest.config.ts
+    ├── package.json
+    ├── public/
+    │   └── vite.svg
+    ├── src/
+    │   ├── App.css
+    │   ├── App.test.tsx
+    │   ├── App.tsx
+    │   ├── assets/
+    │   │   └── react.svg
+    │   ├── index.css
+    │   ├── main.tsx
+    │   └── setupTests.ts
+    ├── tsconfig.app.json
+    ├── tsconfig.json
+    ├── tsconfig.node.json
+    └── vite.config.ts
+
+└── pictures-for-readme/
+
+└── ui-library/
+    ├── .gitignore
+    ├── eslint.config.js
+    ├── jest.config.ts
+    ├── package.json
+    ├── src/
+    │   ├── PortfolioCase/
+    │   │   ├── PortfolioCase.css
+    │   │   ├── PortfolioCase.test.tsx
+    │   │   └── PortfolioCase.tsx
+    │   ├── PhotoGallery/
+    │   │   ├── PhotoGallery.css
+    │   │   ├── PhotoGallery.test.tsx
+    │   │   └── PhotoGallery.tsx
+    │   ├── Card/
+    │   │   ├── Card.css
+    │   │   ├── Card.test.tsx
+    │   │   └── Card.tsx
+    │   ├── index.ts
+    │   └── setupTests.ts
+    ├── tsconfig.json
+    └── vite.config.ts

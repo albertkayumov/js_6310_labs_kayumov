@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
-import Card from '../Card/Card';
-import PhotoGallery from '../PhotoGallery/PhotoGallery';
-import './PortfolioCase.css';
+import React, { useState } from 'react'
+
+import Card from '../Card/Card'
+import PhotoGallery from '../PhotoGallery/PhotoGallery'
+import './PortfolioCase.css'
 
 export interface PortfolioCaseProps {
   title: string;
@@ -20,15 +21,15 @@ const PortfolioCase: React.FC<PortfolioCaseProps> = ({
   onViewDetails,
   onOrder,
 }) => {
-  const [showFullView, setShowFullView] = useState(false);
+  const [showFullView, setShowFullView] = useState(false)
 
   const handleCardClick = () => {
-    setShowFullView(true);
-  };
+    setShowFullView(true)
+  }
 
   const handleCloseFullView = () => {
-    setShowFullView(false);
-  };
+    setShowFullView(false)
+  }
 
   return (
     <>
@@ -58,8 +59,8 @@ const PortfolioCase: React.FC<PortfolioCaseProps> = ({
             <button 
               className="portfolio-case__btn portfolio-case__btn--details"
               onClick={(e) => {
-                e.stopPropagation();
-                onViewDetails();
+                e.stopPropagation()
+                onViewDetails()
               }}
             >
               Подробнее
@@ -67,8 +68,8 @@ const PortfolioCase: React.FC<PortfolioCaseProps> = ({
             <button 
               className="portfolio-case__btn portfolio-case__btn--order"
               onClick={(e) => {
-                e.stopPropagation();
-                onOrder();
+                e.stopPropagation()
+                onOrder()
               }}
             >
               Заказать
@@ -113,7 +114,7 @@ const PortfolioCase: React.FC<PortfolioCaseProps> = ({
         </div>
       )}
     </>
-  );
-};
+  )
+}
 
-export default PortfolioCase;
+export default PortfolioCase

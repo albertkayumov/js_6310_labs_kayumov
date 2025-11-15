@@ -1,5 +1,5 @@
-import './App.css';
-import { Card, PhotoGallery, PortfolioCase } from '@my-app/ui-library';
+import './App.css'
+import { Card, PhotoGallery, PortfolioCase } from '@my-app/ui-library'
 
 const mockPortfolioCases = [
   {
@@ -50,15 +50,15 @@ const mockPortfolioCases = [
       'https://placehold.co/400x200/dc3545/ffffff/png?text=Project+3'
     ]
   }
-];
+]
 
 // Демонстрация использования отдельных компонентов Card и PhotoGallery
 const DemoGallery = () => {
   const demoImages = [
-      'https://placehold.co/400x200/007bff/ffffff/png?text=Демонстрация PhotoGallery',
-      'https://placehold.co/400x200/28a745/ffffff/png?text=Демонстрация PhotoGallery',
-      'https://placehold.co/400x200/dc3545/ffffff/png?text=Демонстрация PhotoGallery'
-  ];
+    'https://placehold.co/400x200/007bff/ffffff/png?text=Демонстрация PhotoGallery',
+    'https://placehold.co/400x200/28a745/ffffff/png?text=Демонстрация PhotoGallery',
+    'https://placehold.co/400x200/dc3545/ffffff/png?text=Демонстрация PhotoGallery'
+  ]
 
   return (
     <Card>
@@ -67,21 +67,21 @@ const DemoGallery = () => {
         <PhotoGallery images={demoImages} />
       </div>
     </Card>
-  );
-};
+  )
+}
 
 function App() {
   const handleViewDetails = (title: string, id: number) => {
-    console.log(`Просмотр деталей: ${title} (ID: ${id})`);
-    alert(`Детальная информация о проекте: ${title}\nID проекта: ${id}`);
-  };
+    console.log(`Просмотр деталей: ${title} (ID: ${id})`)
+    alert(`Детальная информация о проекте: ${title}\nID проекта: ${id}`)
+  }
 
   const handleOrder = (title: string, id: number) => {
-    console.log(`Заказ проекта: ${title} (ID: ${id})`);
-    alert(`Форма заказа для: ${title}\nID проекта: ${id}`);
-  };
+    console.log(`Заказ проекта: ${title} (ID: ${id})`)
+    alert(`Форма заказа для: ${title}\nID проекта: ${id}`)
+  }
 
-  const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear()
 
   return (
     <div className="app">
@@ -118,7 +118,7 @@ function App() {
         <p>© {currentYear} UI Library Demo. Все права защищены.</p>
       </footer>
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

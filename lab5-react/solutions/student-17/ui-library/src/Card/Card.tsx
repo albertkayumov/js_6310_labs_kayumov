@@ -1,5 +1,5 @@
-import React from 'react';
-import './Card.css';
+import React from 'react'
+import './Card.css'
 
 export interface CardProps {
   children: React.ReactNode;
@@ -24,7 +24,7 @@ const Card: React.FC<CardProps> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
-export default Card;
+export default Card

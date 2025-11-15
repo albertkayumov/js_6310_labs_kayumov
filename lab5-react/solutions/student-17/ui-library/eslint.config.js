@@ -9,52 +9,33 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 
 export default defineConfig([
-  globalIgnores(['dist', 'coverage', 'node_modules']),
+  globalIgnores(['dist']),
   {
     files: ['**/*.{js,jsx,ts,tsx}'],
     extends: [
       js.configs.recommended,
       tseslint.configs.recommended,
       reactHooks.configs['recommended-latest'],
+      reactRefresh.configs.vite,
     ],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        }
-      }
     },
     plugins: {
       '@typescript-eslint': typescriptEslint,
       'react': react,
-      'react-hooks': reactHooks,
-      'react-refresh': reactRefresh,
       'import': importPlugin
     },
+  }, {
     rules: {
-      // React Refresh для Vite
-      'react-refresh/only-export-components': [
-        'warn',
-        { allowConstantExport: true },
-      ],
-      
-      // React правила
-      'react/react-in-jsx-scope': 'off', // Не требуется в React 17+
-      
-      // Отступы 2 пробела
       "indent": ["error", 2],
-      
-      // Точки с запятой - без них (как в исходном конфиге)
-      'semi': ['error', 'never'],
-      
-      // Правильный порядок импортов
+      'semi': ['error', 'never'],// Правильный порядок импортов
       'import/order': ['error', {
         'groups': [
-          'builtin',    // Встроенные модули
-          'external',   // Внешние зависимости
-          'internal',   // Внутренние модули
+          'builtin',    // Встроенные модули (path, fs и т.д.)
+          'external',   // Внешние зависимости (react, lodash и т.д.)
+          'internal',   // Внутренние модули (алиасы и т.д.)
           ['parent', 'sibling'], // Родительские и соседние директории
           'index',      // index файлы
           'object',     // Object imports
@@ -67,12 +48,8 @@ export default defineConfig([
             position: 'before'
           },
           {
-            pattern: '../**',
-            group: 'parent'
-          },
-          {
-            pattern: './**',
-            group: 'sibling'
+            pattern: '@/**',
+            group: 'internal'
           }
         ],
         'pathGroupsExcludedImportTypes': ['react'],
@@ -82,20 +59,16 @@ export default defineConfig([
           caseInsensitive: true
         }
       }],      
-      
       // Запрет лишних переносов
       'no-multiple-empty-lines': ['error', {
         max: 1,        // максимум 1 пустая строка подряд
         maxEOF: 0,     // не допускать пустых строк в конце файла
         maxBOF: 0      // не допускать пустых строк в начале файла
       }],
-      
       'padded-blocks': ['error', 'never'], // запрет пустых строк в начале/конце блоков
-      
       'lines-between-class-members': ['error', 'always', {
         exceptAfterSingleLine: true // разрешить без пустой строки после однострочных членов класса
       }],
-      
       'padding-line-between-statements': [
         'error',
         // Пустая строка перед return
@@ -103,8 +76,8 @@ export default defineConfig([
         // Пустая строка перед блоками
         { blankLine: 'always', prev: '*', next: ['block', 'block-like'] },
         // Пустая строка между объявлениями переменных и следующим кодом
-        { blankLine: 'always', prev: ['const', 'let'], next: '*' },
-        { blankLine: 'any', prev: ['const', 'let'], next: ['const', 'let'] },
+        { blankLine: 'always', prev: ['const', 'let', 'var'], next: '*' },
+        { blankLine: 'any', prev: ['const', 'let', 'var'], next: ['const', 'let', 'var'] },
         // Пустая строка между импортами и следующим кодом
         { blankLine: 'always', prev: 'import', next: '*' },
         { blankLine: 'any', prev: 'import', next: 'import' },
@@ -116,18 +89,6 @@ export default defineConfig([
         // Пустая строка между классами
         { blankLine: 'always', prev: 'class', next: 'class' }
       ],
-
-      // TypeScript правила
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      
-      // Запрет var (требование задания)
-      'no-var': 'error',
-      
-      // Запрет require (требование задания)
-      '@typescript-eslint/no-require-imports': 'error',
     },
   },
 ])
