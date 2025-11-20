@@ -59,7 +59,7 @@ const DemoGallery = () => {
     'https://placehold.co/400x200/28a745/ffffff/png?text=Демонстрация PhotoGallery2',
     'https://placehold.co/400x200/dc3545/ffffff/png?text=Демонстрация PhotoGallery3'
   ]
-// Демонстрация PhotoGallery
+
   return (
     <Card>
       <div style={{ padding: '20px' }}>
