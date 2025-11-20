@@ -15,8 +15,8 @@ const mockPortfolioCases = [
     ],
     images: [
       'https://placehold.co/400x200/007bff/ffffff/png?text=Project+1',
-      'https://placehold.co/400x200/007bff/ffffff/png?text=Project+1',
-      'https://placehold.co/400x200/007bff/ffffff/png?text=Project+1'
+      'https://placehold.co/400x200/28a745/ffffff/png?text=Project+1',
+      'https://placehold.co/400x200/dc3545/ffffff/png?text=Project+1'
     ]
   },
   {
@@ -32,7 +32,7 @@ const mockPortfolioCases = [
     ],
     images: [
       'https://placehold.co/400x200/28a745/ffffff/png?text=Project+2',
-      'https://placehold.co/400x200/28a745/ffffff/png?text=Project+2'
+      'https://placehold.co/400x200/007bff/ffffff/png?text=Project+2'
     ]
   },
   {
@@ -47,7 +47,7 @@ const mockPortfolioCases = [
       'Оптимизация скорости'
     ],
     images: [
-      'https://placehold.co/400x200/dc3545/ffffff/png?text=Project+3'
+      'https://placehold.co/400x200/007bff/ffffff/png?text=Project+3'
     ]
   }
 ]
@@ -55,11 +55,11 @@ const mockPortfolioCases = [
 // Демонстрация использования отдельных компонентов Card и PhotoGallery
 const DemoGallery = () => {
   const demoImages = [
-    'https://placehold.co/400x200/007bff/ffffff/png?text=Демонстрация PhotoGallery',
-    'https://placehold.co/400x200/28a745/ffffff/png?text=Демонстрация PhotoGallery',
-    'https://placehold.co/400x200/dc3545/ffffff/png?text=Демонстрация PhotoGallery'
+    'https://placehold.co/400x200/007bff/ffffff/png?text=Демонстрация PhotoGallery1',
+    'https://placehold.co/400x200/28a745/ffffff/png?text=Демонстрация PhotoGallery2',
+    'https://placehold.co/400x200/dc3545/ffffff/png?text=Демонстрация PhotoGallery3'
   ]
-
+// Демонстрация PhotoGallery
   return (
     <Card>
       <div style={{ padding: '20px' }}>
@@ -95,9 +95,11 @@ function App() {
           <h2>Отдельные компоненты:</h2>
           <DemoGallery />
         </div>
+        
+Демонстрация PortfolioCase
 
         <div className="portfolio-section">
-          <h2>Портфолио кейсы:</h2>
+          <h2>PortfolioCase:</h2>
           <div className="portfolio-grid">
             {mockPortfolioCases.map((portfolioCase) => (
               <PortfolioCase
