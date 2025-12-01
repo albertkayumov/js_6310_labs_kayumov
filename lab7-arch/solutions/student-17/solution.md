@@ -1,0 +1,1 @@
+https://github.com/albertkayumov/advertising-agency/pull/2
